@@ -34,11 +34,22 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.readalldata.observe(this, { slot ->
             println("Last few transactions=======" + slot)
-            viewModel.maxMornSlot = 5
-            viewModel.maxEvenSlot= 5
+//            viewModel.maxMornSlot.set(5)
+//            viewModel.maxEvenSlot.set(5)
+            viewModel.setMorningBtnColor()
+            viewModel.setEveningBtnColor()
             viewModel.morningslotvalidation()
             viewModel.eveningslotvalidation()
+            if(viewModel.morningSlotcount.get() == 0){
+                Toast.makeText(applicationContext, "All Morning Slots Booked", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            if(viewModel.eveningSlotcount.get() == 0){
+                Toast.makeText(applicationContext, "All Evening Slots Booked", Toast.LENGTH_SHORT)
+                    .show()
+            }
         })
+
 
 
 
@@ -51,8 +62,8 @@ class MainActivity : AppCompatActivity() {
             viewModel.eveningslot.set("NA")
             viewModel.moringslot.set("NA")
 
-           /* viewModel.morningslotvalidation()
-            viewModel.eveningslotvalidation()*/
+            /* viewModel.morningslotvalidation()
+             viewModel.eveningslotvalidation()*/
 
             viewModel.setMorningBtnColor()
             viewModel.setEveningBtnColor()
@@ -92,6 +103,8 @@ class MainActivity : AppCompatActivity() {
         binding.bookSlot.setOnClickListener(View.OnClickListener {
             viewModel.checkValidation()
             if (viewModel.success.get()) {
+                viewModel.morningslotvalidation()
+                viewModel.eveningslotvalidation()
                 Toast.makeText(applicationContext, "successfully booking added", Toast.LENGTH_SHORT)
                     .show()
             } else {

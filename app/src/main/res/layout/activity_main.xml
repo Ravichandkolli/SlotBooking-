@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/morning_slot"
-                android:text="@{viewModel.morningSlotcount}"
+                android:text="@{String.format(@string/morning_count,viewModel.morningSlotcount)}"
                 android:textSize="18sp" />
             <Button
                 android:id="@+id/morning_slot_button"
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/evening_slot"
-                android:text="@{viewModel.eveningSlotcount}"
+                android:text="@{String.format(@string/evening_count,viewModel.eveningSlotcount)}"
                 android:textSize="18sp" />
             <Button
                 android:id="@+id/evening_slot_button"

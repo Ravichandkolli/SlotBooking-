@@ -1,3 +1,6 @@
-<resources>
+<?xml version="1.0"?>
+    <resources>
     <string name="app_name">SlotBooking</string>
+    <string name="morning_count">Slot Avaialibility : %s</string>
+    <string name="evening_count">Slot Avaialibility : %s</string>
 </resources>
