@@ -6,19 +6,14 @@ import android.view.View
 import android.widget.CalendarView.OnDateChangeListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.colorSpace
-import androidx.core.graphics.green
-import androidx.core.graphics.luminance
-import androidx.core.graphics.red
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModelProvider
 import com.example.slotbooking.R
 import com.example.slotbooking.databinding.ActivityMainBinding
 import com.example.slotbooking.viewmodel.MainViewModel
+import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.time.days
-import kotlin.time.hours
-
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,53 +24,84 @@ class MainActivity : AppCompatActivity() {
         );
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding.viewModel = viewModel
-
-        binding.eveningSlot.setText("Availability Slots 5")
-        binding.morningSlot.setText("Availability Slots 5")
-
         val today = Calendar.getInstance()
         val now = today.timeInMillis
         binding.calender.minDate = now
 
+        val date: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+        println("Default Date is==${date}")
+        viewModel.selectedDate.set(date)
+
+        viewModel.readalldata.observe(this, { slot ->
+            println("Last few transactions=======" + slot)
+            viewModel.maxMornSlot = 5
+            viewModel.maxEvenSlot= 5
+            viewModel.morningslotvalidation()
+            viewModel.eveningslotvalidation()
+        })
+
+
+
 
         binding.calender.setOnDateChangeListener(OnDateChangeListener { view, year, month, dayOfMonth ->
-            var monthNum =month+1
-            Toast.makeText(applicationContext, "$dayOfMonth/$monthNum/$year", Toast.LENGTH_SHORT).show()
-            binding.eveningSlotButton.setBackgroundColor(Color.LTGRAY)
-            binding.morningSlotButton.setBackgroundColor(Color.LTGRAY)
-            viewModel.selectedDate = "$dayOfMonth/$monthNum/$year"
-            binding.eveningSlot.setText("Availability Slots 4")
-            binding.morningSlot.setText("Availability Slots 4")
-           // binding.calender.date.colorSpace.id.days.
+            var monthNum = month + 1
+            Toast.makeText(applicationContext, "$dayOfMonth/$monthNum/$year", Toast.LENGTH_SHORT)
+                .show()
+            viewModel.selectedDate.set("$dayOfMonth/$monthNum/$year")
+            viewModel.eveningslot.set("NA")
+            viewModel.moringslot.set("NA")
+
+           /* viewModel.morningslotvalidation()
+            viewModel.eveningslotvalidation()*/
+
+            viewModel.setMorningBtnColor()
+            viewModel.setEveningBtnColor()
+
+            println("Morning Btn Color is==${viewModel.morningBtnColor.get()}")
+            println("Evening Btn Color is==${viewModel.eveningBtnColor.get()}")
+            println("Selected Date is==${viewModel.selectedDate.get()}")
+            println("Datebase List is==${viewModel.readalldata.value}")
+
+            /* if (viewModel.checkEvening.get() == true){
+                 binding.eveningSlotButton.isLongClickable = false
+             }
+              if (viewModel.checkMorning.get() == true){
+                  binding.eveningSlotButton.isLongClickable = false
+              }*/
+            // binding.calender.date.colorSpace.id.days.
         })
 
 
         binding.morningSlotButton.setOnClickListener(
             View.OnClickListener {
-                binding.morningSlotButton.setBackgroundColor(Color.GREEN)
-                binding.eveningSlotButton.setBackgroundColor(Color.LTGRAY)
-                viewModel.eveningslot = "NA"
-                viewModel.moringslot = "8AM - 2PM"
+                // viewModel.morningBtnColor.set(true)
+                viewModel.moringslot.set("8AM - 2PM")
+                viewModel.morningBtnColor.set(true)
+                println("================Evening " + viewModel.eveningslot.get())
             })
 
         binding.eveningSlotButton.setOnClickListener(
             View.OnClickListener {
-                binding.eveningSlotButton.setBackgroundColor(Color.GREEN)
-                binding.morningSlotButton.setBackgroundColor(Color.LTGRAY)
-                viewModel.eveningslot = "2PM - 8PM"
-                viewModel.moringslot = "NA"
+                viewModel.setEveningBtnColor()
+                viewModel.eveningslot.set("2PM - 8PM")
+                viewModel.eveningBtnColor.set(true)
+                println("================Morning " + viewModel.moringslot.get())
             })
-         viewModel.readalldata.observe(this,{slot ->
-            println("Last few transactions======="+slot)
-        })
+
 
         binding.bookSlot.setOnClickListener(View.OnClickListener {
             viewModel.checkValidation()
-            if (viewModel.success.get()){
-                Toast.makeText(applicationContext, "successfully booking added", Toast.LENGTH_SHORT).show()
+            if (viewModel.success.get()) {
+                Toast.makeText(applicationContext, "successfully booking added", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(
+                    applicationContext,
+                    "Sorry already slot was booked",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
-
 
 
     }

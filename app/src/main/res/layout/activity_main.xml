@@ -33,14 +33,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/morning_slot"
-                android:text=""
+                android:text="@{viewModel.morningSlotcount}"
                 android:textSize="18sp" />
             <Button
                 android:id="@+id/morning_slot_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@{viewModel.morningBtnColor ? @color/Green : @color/Grey}"
                 android:layout_marginLeft="15dp"
-                android:text="8AM - 2PM " />
+                android:text="8AM - 2PM" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,12 +55,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/evening_slot"
-                android:text=""
+                android:text="@{viewModel.eveningSlotcount}"
                 android:textSize="18sp" />
             <Button
                 android:id="@+id/evening_slot_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@{viewModel.eveningBtnColor ? @color/Green : @color/Grey}"
                 android:layout_marginLeft="15dp"
                 android:text="2PM - 8PM " />
         </LinearLayout>
